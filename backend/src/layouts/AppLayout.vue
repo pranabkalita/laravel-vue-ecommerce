@@ -1,17 +1,37 @@
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
 import Sidebar from '../components/Sidebar.vue'
+import Navbar from '../components/Navbar.vue'
+
+const sidebarOpened = ref("true");
+
+onMounted(async () => {
+    handleSidebarOpened();
+    window.addEventListener("resize", handleSidebarOpened);
+});
+
+onUnmounted(() => {
+    window.removeEventListener("resize", handleSidebarOpened);
+});
+
+function handleSidebarOpened () {
+    sidebarOpened.value = window.outerWidth > 768;
+}
+
+function toggleSidebar () {
+    sidebarOpened.value = !sidebarOpened.value;
+}
 </script>
 
 <template>
     <div class="flex min-h-full">
         <!-- Sidebar -->
-        <Sidebar />
+        <Sidebar :class="{ '-ml-[200px]': !sidebarOpened }" />
 
         <div class="flex-1">
             <!-- Header -->
-            <header class="h-10 shadow bg-white">
-                Header
-            </header>
+            <Navbar @toggle-sidebar="toggleSidebar" />
 
             <!-- Content -->
             <main>
