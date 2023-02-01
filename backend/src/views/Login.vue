@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { LockClosedIcon } from '@heroicons/vue/20/solid'
+import { LockClosedIcon, XMarkIcon } from '@heroicons/vue/20/solid'
 
 import store from '../store'
 import GuestLayout from '../layouts/GuestLayout.vue';
@@ -26,7 +26,7 @@ const login = async () => {
         router.push({ name: 'app.dashboard' })
     } catch (error) {
         loading.value = false
-        errorMessage.value = error.data.message
+        errorMessage.value = error.response.data.message
     }
 
 }
@@ -35,6 +35,19 @@ const login = async () => {
 <template>
     <guest-layout title="Sign in to your account">
         <form class="mt-8 space-y-6" @submit.prevent="login">
+
+            <div
+                v-if="errorMessage"
+                class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">
+                {{ errorMessage }}
+
+                <span
+                    @click="errorMessage = ''"
+                    class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-black/20">
+                    <XMarkIcon />
+                </span>
+            </div>
+
             <input type="hidden" name="remember" value="true" />
             <div class="-space-y-px rounded-md shadow-sm">
                 <div>

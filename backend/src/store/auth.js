@@ -26,28 +26,28 @@ const auth = {
 
     actions: {
         async login({ commit }, credentials) {
-            const response = await axiosClient.post("/login", credentials);
+            const { data } = await axiosClient.post("/login", credentials);
 
-            commit("setUser", response.data.user);
-            commit("setToken", response.data.token);
+            commit("setUser", data.user);
+            commit("setToken", data.token);
 
-            return response.data;
+            return data;
         },
 
         async logout({ commit }) {
-            const response = await axiosClient.post("/logout");
+            const { data } = await axiosClient.post("/logout");
 
             commit("setToken", null);
 
-            return response.data;
+            return data;
         },
 
         async getUser({ commit }) {
-            const response = await axiosClient.get("/user");
+            const { data } = await axiosClient.get("/user");
 
-            commit("setUser", response.data);
+            commit("setUser", data);
 
-            return response.data;
+            return data;
         },
     },
 };
