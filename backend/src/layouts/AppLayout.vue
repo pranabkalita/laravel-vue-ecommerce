@@ -3,10 +3,12 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 import Sidebar from '../components/Sidebar.vue'
 import Navbar from '../components/Navbar.vue'
+import store from '../store';
 
 const sidebarOpened = ref("true");
 
 onMounted(async () => {
+    store.dispatch('getUser')
     handleSidebarOpened();
     window.addEventListener("resize", handleSidebarOpened);
 });

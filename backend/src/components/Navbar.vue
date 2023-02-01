@@ -1,4 +1,5 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import {
     Bars3Icon,
     ChevronDownIcon,
@@ -7,7 +8,17 @@ import {
 } from "@heroicons/vue/20/solid";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
+import store from "../store";
+
 const emit = defineEmits(["toggle-sidebar"]);
+
+const router = useRouter()
+
+const logout = async () => {
+    await store.dispatch('logout')
+
+    router.push({ name: 'login' })
+}
 </script>
 
 
@@ -62,7 +73,8 @@ const emit = defineEmits(["toggle-sidebar"]);
                             :class="[
                                 active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                                 'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                            ]">
+                            ]"
+                            @click.prevent="logout">
                             <ArrowLeftOnRectangleIcon
                                 :active="active"
                                 class="mr-2 h-5 w-5 text-indigo-400"
