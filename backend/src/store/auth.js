@@ -46,8 +46,6 @@ const auth = {
             const { data } = await axiosClient.get("/user");
 
             commit("setUser", data);
-
-            return data;
         },
     },
 };

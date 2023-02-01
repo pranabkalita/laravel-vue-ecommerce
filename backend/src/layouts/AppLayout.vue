@@ -1,11 +1,15 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 import Sidebar from '../components/Sidebar.vue'
 import Navbar from '../components/Navbar.vue'
 import store from '../store';
+import Spinner from '../components/Spinner.vue';
 
+// Constants
 const sidebarOpened = ref("true");
+
+const currentUser = computed(() => store.state.auth.user.data)
 
 onMounted(async () => {
     store.dispatch('getUser')
@@ -27,7 +31,7 @@ function toggleSidebar () {
 </script>
 
 <template>
-    <div class="flex min-h-full">
+    <div v-if="currentUser.id" class="flex min-h-full">
         <!-- Sidebar -->
         <Sidebar :class="{ '-ml-[200px]': !sidebarOpened }" />
 
@@ -39,6 +43,13 @@ function toggleSidebar () {
             <main>
                 <router-view></router-view>
             </main>
+        </div>
+    </div>
+
+    <div v-else class="min-h-full bg-gray-200 flex items-center justify-center">
+        <div class="flex flex-col items-center">
+            <Spinner class="h-16 w-16 text-gray-700" />
+            <div class="mt-2">Please Wait ...</div>
         </div>
     </div>
 </template>

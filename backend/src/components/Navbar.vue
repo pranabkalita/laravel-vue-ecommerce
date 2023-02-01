@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { computed } from 'vue'
 import {
     Bars3Icon,
     ChevronDownIcon,
@@ -10,10 +11,15 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 import store from "../store";
 
+// Constants
 const emit = defineEmits(["toggle-sidebar"]);
 
 const router = useRouter()
 
+const currentUser = computed(() => store.state.auth.user.data)
+
+
+// Functions
 const logout = async () => {
     await store.dispatch('logout')
 
@@ -39,7 +45,7 @@ const logout = async () => {
                         src="https://i.pravatar.cc/150?img=15"
                         alt=""
                         class="rounded-full w-8 mr-2">
-                    <small>Username</small>
+                    <small>{{ currentUser.name }}</small>
                     <ChevronDownIcon
                         class="h-5 w-5 text-indigo-200 hover:text-indigo-100"
                         aria-hidden="true" />
