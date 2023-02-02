@@ -3,6 +3,10 @@ defineProps({
     title: {
         type: String,
         default: ''
+    },
+    size: {
+        type: String,
+        default: 'small'
     }
 })
 </script>
@@ -10,10 +14,15 @@ defineProps({
 <template>
     <template v-if="title">
         <div class="flex flex-col items-center">
-            <svg class="animate-spin -ml-1 text-white"
+            <svg class="animate-spin -ml-1 text-gray-600"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 24 24">
+                viewBox="0 0 24 24"
+                :class="{
+                    'h-5 w-5': size === 'small',
+                    'h-10 w-10': size === 'medium',
+                    'h-16 w-16': size === 'large'
+                }">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                 </circle>
                 <path class="opacity-75" fill="currentColor"

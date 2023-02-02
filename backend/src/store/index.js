@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import auth from "./auth";
+import products from "./products";
 
 const store = createStore({
     state: {},
@@ -8,6 +9,7 @@ const store = createStore({
     mutations: {},
     modules: {
         auth,
+        products,
     },
 });
 
