@@ -5,7 +5,7 @@ import { LockClosedIcon, XMarkIcon } from '@heroicons/vue/20/solid'
 
 import store from '../store'
 import GuestLayout from '../layouts/GuestLayout.vue';
-import Spinner from '../components/Spinner.vue';
+import Spinner from '../components/core/Spinner.vue';
 
 const loading = ref(false)
 const errorMessage = ref(false)

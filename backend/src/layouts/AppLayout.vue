@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import Sidebar from '../components/Sidebar.vue'
 import Navbar from '../components/Navbar.vue'
 import store from '../store';
-import Spinner from '../components/Spinner.vue';
+import Spinner from '../components/core/Spinner.vue';
 
 // Constants
 const sidebarOpened = ref("true");
@@ -47,9 +47,6 @@ function toggleSidebar () {
     </div>
 
     <div v-else class="min-h-full bg-gray-200 flex items-center justify-center">
-        <div class="flex flex-col items-center">
-            <Spinner class="h-16 w-16 text-gray-700" />
-            <div class="mt-2">Please Wait ...</div>
-        </div>
+        <Spinner title="Please wait ..." />
     </div>
 </template>
