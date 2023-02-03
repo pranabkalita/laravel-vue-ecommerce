@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductListResource;
 use App\Http\Resources\ProductResource;
+
+// Generated using: php artisan make:controller --api --requests --model=Product
 
 class ProductController extends Controller
 {
@@ -15,12 +15,15 @@ class ProductController extends Controller
     {
         $search = request('search', false);
         $perPage = request('per_page', 10);
+        $sortField = request('sort_field', 'updated_at');
+        $sortDirection = request('sort_direction', 'desc');
 
         $query = Product::query();
         if ($search) {
             $query->where('title', 'like', "%{$search}%")
                 ->orWhere('description', 'like', "%{$search}%");
         }
+        $query->orderBy($sortField, $sortDirection);
 
         $products = $query->paginate($perPage);
 

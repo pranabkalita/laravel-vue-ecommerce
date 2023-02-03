@@ -30,7 +30,7 @@ const products = {
     actions: {
         async getProducts(
             { commit },
-            { url = null, search = "", perPage = 10 }
+            { url = null, search = "", perPage = 10, sortField, sortDirection }
         ) {
             commit("setProducts", [true]);
 
@@ -40,6 +40,8 @@ const products = {
                     params: {
                         search,
                         per_page: perPage,
+                        sort_field: sortField,
+                        sort_direction: sortDirection,
                     },
                 });
 

@@ -1,14 +1,18 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import Spinner from '../components/core/Spinner.vue';
+import TableHeaderCell from '../components/core/table/TableHeaderCell.vue'
 
 import { PRODUCTS_PER_PAGE } from './../constants'
 import store from './../store'
+
 
 // Constants
 const perPage = ref(PRODUCTS_PER_PAGE)
 const search = ref('')
 const products = computed(() => store.state.products)
+const sortField = ref('updated_at')
+const sortDirection = ref('desc')
 
 // Hooks
 onMounted(() => {
@@ -17,13 +21,34 @@ onMounted(() => {
 
 // Functions
 const getProducts = async (url = null) => {
-    await store.dispatch('getProducts', { url, search: search.value, perPage: perPage.value })
+    await store.dispatch('getProducts', {
+        url,
+        search: search.value,
+        perPage: perPage.value,
+        sortField: sortField.value,
+        sortDirection: sortDirection.value
+    })
 }
 
 const getForPage = async (event, link) => {
     if (!link.url || link.active) { return }
 
     await getProducts(link.url)
+}
+
+const sortProducts = (field) => {
+    if (sortField.value === field) {
+        if (sortDirection.value === 'asc') {
+            sortDirection.value = 'desc'
+        } else {
+            sortDirection.value = 'asc'
+        }
+    } else {
+        sortField.value = field
+        sortDirection.value = 'asc'
+    }
+
+    getProducts(null)
 }
 </script>
 
@@ -62,11 +87,26 @@ const getForPage = async (event, link) => {
             <table class="table-auto w-full">
                 <thead>
                     <tr>
-                        <th class="border-b-2 p-2 text-left">ID</th>
-                        <th class="border-b-2 p-2 text-left">Image</th>
-                        <th class="border-b-2 p-2 text-left">Title</th>
-                        <th class="border-b-2 p-2 text-left">Price</th>
-                        <th class="border-b-2 p-2 text-left">Last Updated At</th>
+                        <TableHeaderCell @click="sortProducts" field="id" :sort-field="sortField"
+                            :sort-direction="sortDirection">
+                            ID
+                        </TableHeaderCell>
+                        <TableHeaderCell field="" :sort-field="sortField"
+                            :sort-direction="sortDirection">
+                            Image
+                        </TableHeaderCell>
+                        <TableHeaderCell @click="sortProducts" field="title" :sort-field="sortField"
+                            :sort-direction="sortDirection">
+                            Title
+                        </TableHeaderCell>
+                        <TableHeaderCell @click="sortProducts" field="price" :sort-field="sortField"
+                            :sort-direction="sortDirection">
+                            Price
+                        </TableHeaderCell>
+                        <TableHeaderCell @click="sortProducts" field="updated_at" :sort-field="sortField"
+                            :sort-direction="sortDirection">
+                            Last Updated At
+                        </TableHeaderCell>
                     </tr>
                 </thead>
                 <tbody>
