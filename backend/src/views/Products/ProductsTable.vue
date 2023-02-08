@@ -1,10 +1,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import Spinner from '../components/core/Spinner.vue';
-import TableHeaderCell from '../components/core/table/TableHeaderCell.vue'
+import Spinner from '../../components/core/Spinner.vue';
+import TableHeaderCell from '../../components/core/table/TableHeaderCell.vue'
 
-import { PRODUCTS_PER_PAGE } from './../constants'
-import store from './../store'
+import { PRODUCTS_PER_PAGE } from '../../constants'
+import store from '../../store'
 
 
 // Constants
@@ -53,14 +53,6 @@ const sortProducts = (field) => {
 </script>
 
 <template>
-    <div class="flex items-center justify-between mb-3">
-        <h1 class="text-3xl font-semibold">Products</h1>
-        <button type="submit"
-            class="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-            @click="showProductModal">Add
-            new Product</button>
-    </div>
-
     <div class="bg-white p-4 rounded-lg shadow">
         <div class="flex justify-between border-b-2 pb-3">
             <div class="flex items-center">
