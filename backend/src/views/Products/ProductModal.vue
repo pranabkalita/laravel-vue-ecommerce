@@ -36,15 +36,15 @@ const product = ref({
 })
 
 // Hooks
-// onUpdated(() => {
-//     product.value = {
-//         id: props.product.id,
-//         title: props.product.title,
-//         image: props.product.image,
-//         description: props.product.description,
-//         price: props.product.price,
-//     }
-// })
+onUpdated(() => {
+    product.value = {
+        id: props.product.id,
+        title: props.product.title,
+        image: props.product.image,
+        description: props.product.description,
+        price: props.product.price,
+    }
+})
 
 
 // Computed Props

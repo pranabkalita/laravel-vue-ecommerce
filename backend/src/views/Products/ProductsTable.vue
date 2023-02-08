@@ -22,7 +22,10 @@ onMounted(() => {
     getProducts()
 })
 
-// Functions
+// Emits
+const emits = defineEmits(['edit'])
+
+// Methods
 const getProducts = async (url = null) => {
     await store.dispatch('getProducts', {
         url,
@@ -33,7 +36,6 @@ const getProducts = async (url = null) => {
     })
 }
 
-// Methods
 const getForPage = async (event, link) => {
     if (!link.url || link.active) { return }
 
@@ -53,6 +55,10 @@ const sortProducts = (field) => {
     }
 
     getProducts(null)
+}
+
+const editProduct = async (product) => {
+    emits('edit', product)
 }
 
 const deleteProduct = async (product) => {
@@ -124,7 +130,7 @@ const deleteProduct = async (product) => {
                     <tr v-for="product of products.data">
                         <td class="border-b p-2">{{ product.id }}</td>
                         <td class="border-b p-2">
-                            <img class="w-16" :alt="product.title" :src="product.image">
+                            <img class="w-16" :alt="product.title" :src="product.image_url">
                         </td>
                         <td class="border-b p-2 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
                             {{ product.title }}

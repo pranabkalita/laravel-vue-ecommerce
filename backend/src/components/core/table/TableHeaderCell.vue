@@ -7,14 +7,14 @@ defineProps({
     sortDirection: String
 })
 
-const emit = defineEmits(['click'])
+const emits = defineEmits(['click'])
 </script>
 
 
 <template>
     <th
         class="border-b-2 p-2 text-left cursor-pointer bg-gray-100"
-        @click="emit('click', field)"
+        @click="emits('click', field)"
         :class="field === sortField ? 'bg-blue-50' : ''">
         <div class="flex justify-between">
             <slot></slot>

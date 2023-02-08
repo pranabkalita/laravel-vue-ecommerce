@@ -85,6 +85,10 @@ const products = {
         deleteProduct({ commit }, id) {
             return axiosClient.delete(`/products/${id}`);
         },
+
+        getProduct({ commit }, id) {
+            return axiosClient.get(`/products/${id}`);
+        },
     },
 };
 

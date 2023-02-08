@@ -1,19 +1,33 @@
 <script setup>
 import { ref } from 'vue';
+import store from '../../store';
 import ProductModal from './ProductModal.vue';
 import ProductsTable from './ProductsTable.vue';
 
-const showModal = ref(false)
-const productModel = ref({
+const emptyProduct = {
     id: '',
     title: '',
     image: '',
     description: '',
     price: ''
-})
+}
+const showModal = ref(false)
+const productModel = ref({ ...emptyProduct })
 
+// Methods
 const showProductModal = () => {
     showModal.value = true
+}
+
+const editProduct = async (product) => {
+    const { data } = await store.dispatch('getProduct', product.id)
+
+    productModel.value = data
+    showProductModal()
+}
+
+const modalClose = () => {
+    productModel.value = { ...emptyProduct }
 }
 </script>
 
@@ -27,6 +41,6 @@ const showProductModal = () => {
         </button>
     </div>
 
-    <ProductModal v-model="showModal" :product="productModel" />
-    <ProductsTable />
+    <ProductModal v-model="showModal" :product="productModel" @close="modalClose" />
+    <ProductsTable @edit="editProduct" />
 </template>
