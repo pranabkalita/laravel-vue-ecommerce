@@ -53,17 +53,17 @@ const inputClasses = computed(() => {
 
             <template v-if="type === 'textarea'">
                 <textarea :name="name" :required="required" :value="props.modelValue" :class="inputClasses"
-                    :placeholder="label" @input="emit('update:modelValue', $event.target.value)"></textarea>
+                    :placeholder="label" @input="emits('update:modelValue', $event.target.value)"></textarea>
             </template>
 
             <template v-else-if="type === 'file'">
                 <input :type="type" :name="name" :required="required" :value="props.modelValue" :class="inputClasses"
-                    :placeholder="label" @input="emit('update:modelValue', $event.target.files[0])" />
+                    :placeholder="label" @input="emits('change', $event.target.files[0])" />
             </template>
 
             <template v-else>
                 <input :type="type" :name="name" :required="required" :value="props.modelValue" :class="inputClasses"
-                    :placeholder="label" @input="emit('update:modelValue', $event.target.value)" step="0.01" />
+                    :placeholder="label" @input="emits('update:modelValue', $event.target.value)" step="0.01" />
             </template>
 
             <span v-if="append"

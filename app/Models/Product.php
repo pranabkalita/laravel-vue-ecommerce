@@ -14,6 +14,20 @@ class Product extends Model
     use HasSlug;
     use SoftDeletes;
 
+    protected $fillable = [
+        'title',
+        'slug',
+        'image',
+        'image_mime',
+        'image_size',
+        'description',
+        'price',
+        'created_by',
+        'updated_by',
+        'deleted_at',
+        'deleted_by'
+    ];
+
     /**
      * Get the options for generating the slug.
      */
