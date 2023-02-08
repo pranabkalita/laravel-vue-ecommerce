@@ -4,6 +4,13 @@ import ProductModal from './ProductModal.vue';
 import ProductsTable from './ProductsTable.vue';
 
 const showModal = ref(false)
+const productModel = ref({
+    id: '',
+    title: '',
+    image: '',
+    description: '',
+    price: ''
+})
 
 const showProductModal = () => {
     showModal.value = true
@@ -20,6 +27,6 @@ const showProductModal = () => {
         </button>
     </div>
 
-    <ProductModal v-model="showModal" />
+    <ProductModal v-model="showModal" :product="productModel" />
     <ProductsTable />
 </template>

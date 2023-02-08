@@ -1,5 +1,6 @@
 <script setup>
-import { computed } from 'vue'
+import { ref } from 'vue'
+import { computed, onUpdated } from 'vue'
 import {
     TransitionRoot,
     TransitionChild,
@@ -7,26 +8,87 @@ import {
     DialogPanel,
     DialogTitle,
 } from '@headlessui/vue'
+import Spinner from '../../components/core/Spinner.vue';
+import CustomInput from '../../components/core/CustomInput.vue';
+
+import store from '../../store';
 
 // Props
 const props = defineProps({
-    modelValue: Boolean
+    modelValue: Boolean,
+    product: {
+        type: Object,
+        required: true
+    }
 })
 
 // Emits
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'close'])
 
 // Constants
+const loading = ref(false)
+const product = ref({
+    id: props.product.id,
+    title: props.product.title,
+    image: props.product.image,
+    description: props.product.description,
+    price: props.product.price,
+})
+
+// Hooks
+onUpdated(() => {
+    product.value = {
+        id: props.product.id,
+        title: props.product.title,
+        image: props.product.image,
+        description: props.product.description,
+        price: props.product.price,
+    }
+})
+
 
 // Computed Props
 const show = computed({
     get: () => props.modelValue,
-    set: (value) => emits('update:modelValue', value)
+    set: (value) => emit('update:modelValue', value)
 })
 
 // Methods
-function closeModal () {
+const closeModal = () => {
     show.value = false
+    emit('close')
+}
+
+const onSubmit = async () => {
+    loading.value = true
+
+    if (product.value.id) {
+        try {
+            const response = await store.dispatch('updateProduct', product.value)
+
+            loading.value = false
+            if (response.status === 200) {
+                // TODO: Show Notification
+                await store.dispatch('getProducts')
+                closeModal()
+            }
+        } catch (error) {
+
+        }
+    } else {
+        try {
+            const response = await store.dispatch('createProduct', product.value)
+
+            loading.value = false
+            if (response.status === 201) {
+                // TODO: Show Notification
+                await store.dispatch('getProducts')
+                closeModal()
+            }
+        } catch (error) {
+
+        }
+    }
 }
 </script>
 
@@ -41,7 +103,7 @@ function closeModal () {
                 leave="duration-200 ease-in"
                 leave-from="opacity-100"
                 leave-to="opacity-0">
-                <div class="fixed inset-0 bg-black bg-opacity-25" />
+                <div class="fixed inset-0 bg-black bg-opacity-50" />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
@@ -56,27 +118,48 @@ function closeModal () {
                         leave-from="opacity-100 scale-100"
                         leave-to="opacity-0 scale-95">
                         <DialogPanel
-                            class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                            <DialogTitle
-                                as="h3"
-                                class="text-lg font-medium leading-6 text-gray-900">
-                                Payment successful
-                            </DialogTitle>
-                            <div class="mt-2">
-                                <p class="text-sm text-gray-500">
-                                    Your payment has been successfully submitted. We’ve sent you
-                                    an email with all of the details of your order.
-                                </p>
-                            </div>
+                            class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
 
-                            <div class="mt-4">
-                                <button
-                                    type="button"
-                                    class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                    @click="closeModal">
-                                    Got it, thanks!
+                            <Spinner v-if="loading" title="Please Wait ..."
+                                class="absolute left-0 top-0 right-0 bottom-0 bg-white flex items-center justify-center" />
+
+                            <header class="py-3 px-4 flex justify-between items-center">
+                                <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
+                                    {{ product.id ? `Update Product: "${props.product.title}"` : 'Create New Product' }}
+                                </DialogTitle>
+
+                                <button @click.prevent="closeModal()"
+                                    class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        view-box="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
-                            </div>
+                            </header>
+
+                            <form @submit.prevent="onSubmit">
+                                <div class="bg-white px-4 pt-5 pb-4">
+                                    <CustomInput class="mb-2" v-model="product.title" label="Product Title" />
+                                    <CustomInput type="file" class="mb-2" label="Product Image"
+                                        @change="file => product.image = file" />
+                                    <CustomInput type="textarea" class="mb-2" v-model="product.description"
+                                        label="Description" />
+                                    <CustomInput type="number" class="mb-2" v-model="product.price"
+                                        label="Price" prepend="₹" />
+                                </div>
+                            </form>
+
+                            <footer class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button type="submit"
+                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2  text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 ml-3">Submit</button>
+
+                                <button type="button"
+                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                    ref="cancelButtonRef"
+                                    @click.prevent="closeModal()">Cancel</button>
+                            </footer>
+
                         </DialogPanel>
                     </TransitionChild>
                 </div>
